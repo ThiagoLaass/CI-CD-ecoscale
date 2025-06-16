@@ -1,0 +1,16 @@
+2025-05-26 21:45:47.720 -03:00 [INF] Swagger UI available at http://localhost:5051/swagger/index.html
+2025-05-26 21:45:48.009 -03:00 [INF] Server starting and listening on http://0.0.0.0:5051
+2025-05-26 21:45:48.062 -03:00 [INF] User profile is available. Using 'C:\Users\thiag\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-05-26 21:45:48.354 -03:00 [INF] Now listening on: http://0.0.0.0:5051
+2025-05-26 21:45:48.361 -03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-05-26 21:45:48.373 -03:00 [INF] Hosting environment: Development
+2025-05-26 21:45:48.386 -03:00 [INF] Content root path: C:\Repos\pmg-es-2025-1-ti4-3170100-pesquisa-bh-tec\Codigo\Backend\EcoScale
+2025-05-26 21:45:52.954 -03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5051/swagger/index.html - null null
+2025-05-26 21:45:53.116 -03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5051/swagger/index.html - 200 null text/html;charset=utf-8 178.9183ms
+2025-05-26 21:45:53.215 -03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5051/swagger/index.js - null null
+2025-05-26 21:45:53.224 -03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5051/swagger/index.js - 200 null application/javascript;charset=utf-8 9.3302ms
+2025-05-26 21:45:53.427 -03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5051/swagger/v1/swagger.json - null null
+2025-05-26 21:45:53.579 -03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5051/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 152.1121ms
+2025-05-26 21:45:54.264 -03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5051/swagger/v1/swagger.json - null null
+2025-05-26 21:45:54.294 -03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5051/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 30.6876ms
+2025-05-26 21:46:21.218 -03:00 [INF] Application is shutting down...

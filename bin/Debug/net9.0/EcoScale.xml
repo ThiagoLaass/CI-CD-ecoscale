@@ -1,0 +1,591 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EcoScale</name>
+    </assembly>
+    <members>
+        <member name="T:EcoScale.Migrations.fix_relatorio">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.Migrations.fix_relatorio.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.Migrations.fix_relatorio.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.Migrations.fix_relatorio.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:EcoScale.Migrations.fix_empresa_relation">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.Migrations.fix_empresa_relation.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.Migrations.fix_empresa_relation.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.Migrations.fix_empresa_relation.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.src.Auth.Auth.ProcessLoginAsync``1(``0,System.String,System.String,System.String,System.String)">
+            <summary>
+            Processa a autenticação de um usuário (empresa ou moderador), verificando a senha,
+            gerando um código de confirmação e enviando este código por email.
+            </summary>
+            <typeparam name="T">Tipo da entidade a ser autenticada.</typeparam>
+            <param name="user">A entidade do usuário que está tentando realizar o login.</param>
+            <param name="email">O email do usuário para envio do código de confirmação.</param>
+            <param name="refId">Identificador único da entidade (pode ser CNPJ ou Id).</param>
+            <param name="inputPassword">Senha informada pelo usuário na tentativa de login.</param>
+            <param name="storedPasswordHash">Hash da senha armazenada para verificação.</param>
+            <returns>A entidade autenticada do tipo <typeparamref name="T"/>.</returns>
+            <exception cref="T:EcoScale.src.Middlewares.Exceptions.InvalidPasswordException">Lançada quando a senha informada é inválida.</exception>
+        </member>
+        <member name="M:EcoScale.src.Auth.Auth.ConfirmarEmailInternal(EcoScale.src.Public.DTOs.EmailConfirmationRequest,System.String)">
+            <summary>
+            Confirma o email de um usuário através da validação do token de confirmação.
+            </summary>
+            <param name="request">Objeto que contém os dados da requisição, incluindo a entidade e o código de confirmação.</param>
+            <param name="refId">Função que extrai o identificador único (refId) da entidade.</param>
+            <returns>Retorna um token JWT gerado para a entidade confirmada.</returns>
+            <exception cref="T:EcoScale.src.Middlewares.Exceptions.NotFoundException">Lançada quando não é encontrada uma confirmação de email associada ao refId.</exception>
+            <exception cref="T:EcoScale.src.Middlewares.Exceptions.InvalidTokenException">Lançada quando o código de confirmação fornecido não é válido.</exception>
+        </member>
+        <member name="M:EcoScale.src.Auth.Auth.ConfirmarEmail(EcoScale.src.Public.DTOs.EmailConfirmationRequest)">
+            <summary>
+            Confirma o email de uma empresa utilizando o código de validação recebido.
+            </summary>
+            <param name="request">Objeto contendo os dados da empresa e o código de confirmação.</param>
+            <returns>Um token JWT gerado para a empresa após confirmação do email.</returns>
+            <exception cref="T:EcoScale.src.Middlewares.Exceptions.NotFoundException">Lançada quando não é encontrada a confirmação de email associada ao CNPJ da empresa.</exception>
+            <exception cref="T:EcoScale.src.Middlewares.Exceptions.ExpiredTokenException">Lançada quando o código de confirmação está expirado.</exception>
+            <exception cref="T:EcoScale.src.Middlewares.Exceptions.InvalidTokenException">Lançada quando o código informado não é o mesmo que foi enviado.</exception>
+        </member>
+        <member name="M:EcoScale.src.Auth.Auth.SendConfirmationEmail(System.String,System.String)">
+            <summary>
+            Envia um e-mail de confirmação contendo um número de verificação de seis dígitos para o endereço de e-mail informado.
+            </summary>
+            <param name="email">O endereço de e-mail do destinatário.</param>
+            <param name="codigo">O código para validação</param>
+            <returns>
+            Retorna um objeto do tipo EmailConfirmacao que contém:
+              - RefId: o identificador da entidade,
+              - Codigo: o número de verificação enviado por e-mail,
+              - Confirmado: um valor booleano que inicialmente é falso,
+            indicando que a confirmação ainda não foi realizada.
+            </returns>
+            <remarks>
+            Este método gera um número de verificação usando um gerador criptográfico, envia o e-mail usando um serviço de envio de e-mails e constrói o objeto EmailConfirmacao para acompanhar o estado da confirmação.
+            </remarks>
+        </member>
+        <member name="M:EcoScale.src.Auth.Cryptography.CreateHash(System.String)">
+            <summary>
+            Gera um hash utilizando o algoritmo Rfc2898DeriveBytes com SHA256.
+            </summary>
+            <param name="strToHash">A string que será utilizada como base para a geração do hash.</param>
+            <returns>
+            Uma string codificada em Base64 que contém o sal concatenado com o hash resultante.
+            </returns>
+            <remarks>
+            O método utiliza um salt de 16 bytes e executa 10000 iterações para derivar um hash de 20 bytes, 
+            aumentando a segurança contra ataques de força bruta.
+            </remarks>
+        </member>
+        <member name="M:EcoScale.src.Auth.Cryptography.VerifyHash(System.String,System.String)">
+            <summary>
+            Verifica se uma string corresponde ao hash fornecido utilizando PBKDF2 com o algoritmo SHA256.
+            </summary>
+            <param name="hashedStr">O hash codificado em Base64 que contém o salt (primeiros 16 bytes) e o hash (bytes subsequentes).</param>
+            <param name="strToVerify">A string que será verificada contra o hash.</param>
+            <returns>
+            Retorna true se o hash derivado da string para verificação for igual ao hash contido em 'hashedStr',
+            caso contrário, retorna false.
+            </returns>
+        </member>
+        <member name="M:EcoScale.src.Auth.Jwt.GetClaims(System.String)">
+            <summary>
+            Obtém as declarações (claims) contidas no token JWT informado.
+            Utiliza a classe JwtSecurityTokenHandler para processar o token e extrair suas declarações.
+            </summary>
+            <param name="token">O token JWT no formato string.</param>
+            <returns>Uma coleção de objetos Claim extraídos do token.</returns>
+        </member>
+        <member name="M:EcoScale.src.Controllers.AuthController.LoginAsync(EcoScale.src.Public.DTOs.LoginRequest)">
+            <summary>
+            Login de um usuário (empresa ou moderador).
+            </summary>
+            <remarks>
+            Caso seja o primeiro login da empresa, o token jwt na resposta estará nulo. É necessário informar o código enviado pelo e-mail (o código é valido por 30 minutos).
+            A confirmarção do email é feita na rota email-confirmation, a rota retorna um token jwt.
+            </remarks>
+            <param name="request">Objeto contendo o email e a senha do usuário</param>
+            <response code="200">Indica que o usuário foi encontrado e retornado com sucesso.</response>
+            <response code="400">Indica que os dados fornecidos são inválidos.</response>
+            <response code="404">Indica que o usuário não foi encontrado.</response>
+            <response code="401">Indica que os dados fornecidos são incorretos.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.AuthController.CompanyEmailConfirmation(EcoScale.src.Public.DTOs.EmailConfirmationRequest)">
+            <summary>
+            Confirma o e-mail de um usuário e retorna um token jwt.
+            </summary>
+            <param name="request">Objeto contendo os dados necessários para a confirmação do e-mail (email e código)</param>
+            <returns>Um objeto IActionResult contendo um token encapsulado com o token jwt.</returns>
+            <response code="200">Confirmação realizada com sucesso e token gerado.</response>
+            <response code="400">Código incorreto.</response>
+            <response code="400">Código expirado.</response>
+            <response code="404">O email de confirmação não foi encontrado.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.EmpresaController.New(EcoScale.src.Public.DTOs.CompanyCreationRequest)">
+            <summary>
+            Cria uma nova instância de Empresa.
+            </summary>
+            <remarks>
+            Este endpoint adiciona uma nova empresa no sistema, retornando o objeto criado. Para acessar o token JWT, é necessário confirmar o e-mail da empresa.
+            O código de confirmação é enviado por e-mail após a criação da empresa. Para confirmar o e-mail, utilize o endpoint /auth/empresa/email-confirmation.
+            </remarks>
+            <param name="e">Objeto do tipo CompanyCreationRequest com os dados para criação.</param>
+            <response code="201">Indica que a empresa foi criada com sucesso.</response>
+            <response code="400">Indica que os dados fornecidos são inválidos.</response>
+            <response code="409">Indica que o CNPJ ou email utilizado para cadastrar ja existe na base de dados.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.EmpresaController.Get">
+            <summary>
+            Recupera os dados da empresa com base no JWT.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição. A empresa é encontrada atraves do JWT
+            </remarks>
+            <returns>
+            Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula a entidade <see cref="T:EcoScale.src.Models.Empresa"/> caso encontrada.
+            </returns>
+            <response code="200">Retorna a empresa correspondente ao CNPJ.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Empresa com o CNPJ especificado não foi encontrada.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.EmpresaController.Del">
+            <summary>
+            Efetua uma exclusão lógica da empresa na base de dados.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <returns>
+            Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula a entidade <see cref="T:EcoScale.src.Models.Empresa"/> caso encontrada.
+            </returns>
+            <response code="200">Retorna a empresa removida correspondente ao CNPJ.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Empresa com o CNPJ especificado não foi encontrada.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.EmpresaController.Patch(EcoScale.src.Public.DTOs.CompanyUpdateRequest)">
+            <summary>
+            Atualiza os dados da empresa (apenas aqueles que foram atualizados).
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <param name="request">Dados da empresa que foram atualizados.</param>
+            <returns>
+            Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula a entidade <see cref="T:EcoScale.src.Models.Empresa"/> caso encontrada.
+            </returns>
+            <response code="200">Retorna a empresa atualizada correspondente ao CNPJ.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Empresa com o CNPJ especificado não foi encontrada.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.EmpresaController.AvaliacaoRelatorio(EcoScale.src.Public.DTOs.SolicitarAvaliacaoRequest)">
+            <summary>
+            Solicita a avaliação de um relatório da empresa.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <response code="200">O pedido de avaliação foi criado.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="400">A empresa não tem um relatório para ser avaliado.</response>
+            <response code="404">Empresa não encontrada</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.EmpresaController.GetRelatorio">
+            <summary>
+            Recupera o relatório da empresa com base no JWT.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <response code="200">O relatorio da empresa</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Relatorio ou empresa não encontrada</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.LLMController.GetCriterios(EcoScale.src.Public.DTOs.GetCriteriosRequest)">
+            <summary>
+            Busca os critérios de avaliação que a empresa irá responder.
+            </summary>
+            <remarks>
+            Os critérios estão hardcoded no LLMService. Basta trocar para a resposta da LLM.
+            </remarks>
+        </member>
+        <member name="M:EcoScale.src.Controllers.LLMController.GetRespostaLLM(EcoScale.src.Public.DTOs.GetLLMResponseRequest)">
+            <summary>
+            Gera o relatório com base nas respostas da empresa.
+            </summary>
+        </member>
+        <member name="M:EcoScale.src.Controllers.ModeradorController.New(EcoScale.src.Public.DTOs.ModeradorCreationRequest)">
+            <summary>
+            A criação de um novo moderador.
+            </summary>
+            <remarks>
+            A criação de um novo moderador requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <param name="request">Objeto do tipo ModeradorCreationRequest com os dados para criação.</param>
+            <response code="201">Indica que o moderador foi criado com sucesso.</response>
+            <response code="400">Indica que os dados fornecidos são inválidos.</response>
+            <response code="409">Indica que o CPF ou email utilizado para cadastrar ja existe na base de dados.</response>
+            <response code="500">Indica que ocorreu um erro interno no servidor.</response>
+            <response code="401">Indica que o usuário não está autorizado a acessar este recurso.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.ModeradorController.Get">
+            <summary>
+            Recupera os dados do moderador com base no JWT.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição. O moderador é encontrado através do JWT.
+            </remarks>
+            <returns>
+            Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula a entidade <see cref="T:EcoScale.src.Models.Moderador"/> caso encontrada.
+            </returns>
+            <response code="200">Retorna o moderador.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Moderador não encontrado.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.ModeradorController.Avaliar(EcoScale.src.Public.DTOs.AvaliarRelatorio)">
+            <summary>
+            A avaliação de um relatório. Ainda em teste
+            </summary>
+            <remarks>
+            A avaliação de um relatório requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <param name="request">Objeto do tipo AvaliarRelatorio com os dados para avaliação.</param>
+            <response code="200">Indica que o relatório foi avaliado com sucesso.</response>
+            <response code="400">Indica que os dados fornecidos são inválidos.</response>
+            <response code="404">Indica que o relatório não foi encontrado.</response>
+            <response code="500">Indica que ocorreu um erro interno no servidor.</response>
+            <response code="401">Indica que o usuário não está autorizado a acessar este recurso.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.PlanilhaController.CreatePlanilha(EcoScale.src.Public.DTOs.PlanilhaCreationRequest)">
+            <summary>
+            A criação de uma nova planilha.
+            </summary>
+            <remarks>
+            A criação de uma nova planilha requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <param name="request">Objeto do tipo PlanilhaCreationRequest com os dados para criação.</param>
+            <response code="201">Indica que a planilha foi criada com sucesso.</response>
+            <response code="400">Indica que os dados fornecidos são inválidos.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.PlanilhaController.GetPlanilha(System.Int32)">
+            <summary>
+            Busca uma planilha pelo ID.
+            </summary>
+            <remarks>
+            A criação de uma nova planilha requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <param name="Id">Id da planilha</param>
+            <response code="200">Retorna a planilha</response>
+            <response code="404">Nenhuma planilha encontrada com o Id fornecido</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.PlanilhaController.PatchPlanilha(EcoScale.src.Public.DTOs.PlanilhaUpdateRequest)">
+            <summary>
+            A criação de uma nova planilha.
+            </summary>
+            <remarks>
+            A criação de uma nova planilha requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <param name="request">Objeto do tipo <see cref="T:EcoScale.src.Public.DTOs.PlanilhaUpdateRequest"/> com os dados atualizados da planilha</param>
+            <response code="200">Retorna a planilha atualizada</response>
+            <response code="404">Nenhuma planilha encontrada com o Id fornecido</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.New(EcoScale.src.Public.DTOs.GetCriteriosRequest)">
+             <summary>
+             Cria um novo questionário.
+             </summary>
+             <remarks>
+             Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+             O campo 'Contexto' da empresa é preenchido automaticamente assim que o questionário é criado.
+             Valores possíveis para os enums, e seus respectivos significados:
+            
+             Avaliacao:
+             
+               0 - NAO_FEITO  
+               1 - MAL_FEITO  
+               2 - FEITO  
+               3 - BEM_FEITO  
+               4 - NAO_APLICA  
+               5 - PENDENTE
+             
+             Relevancia:
+             
+               0 - NAO_RELEVANTE  
+               1 - RELEVANTE  
+               2 - MUITO_RELEVANTE
+             
+             </remarks>
+             <param name="request">
+             Objeto do tipo <see cref="T:EcoScale.src.Public.DTOs.QuestionarioCreationRequest"/> com os dados para criação.
+             </param>
+             <returns>
+             Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula a entidade <see cref="T:EcoScale.src.Models.Questionario"/> criada.
+             </returns>
+             <response code="200">Retorna o questionário criado.</response>
+             <response code="401">Usuário não autorizado a acessar esta operação.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.Get(System.Int32)">
+            <summary>
+            Pesquisa por um questionario pelo id.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <param name="id">Id do questionario a ser pesquisado, recebido via query string.</param>
+            <returns>
+            Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula a entidade <see cref="T:EcoScale.src.Models.Questionario"/> caso encontrado.
+            </returns>
+            <response code="200">Retorna o empresa criado.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Questionario não encontrado.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.GetAll">
+            <summary>
+            Pesquisa por todos os questionarios.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <returns>
+            Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula uma coleção de entidades <see cref="T:EcoScale.src.Models.Questionario"/>.
+            </returns>
+            <response code="200">Retorna todos os questionarios.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Nenhum questionario encontrado.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.Delete(System.Int32)">
+            <summary>
+            Faz a remocão lógica de um questionario.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <param name="id">Id do questionario a ser removido, recebido via query string.</param>
+            <returns>
+            Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula a entidade <see cref="T:EcoScale.src.Models.Questionario"/> removido.
+            </returns>
+            <response code="200">O questionario removido.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Questionario não encontrado.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.GetCriterio(EcoScale.src.Public.DTOs.GetCriteriosByIdsRequest)">
+            <summary>
+            Busca criterios da planilha (o questionario é criado a partir dos dados da planilha) por um array de ids. A requisição é um post por questões de facilidade.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            O endpoint irá retornar todo o JSON das areas e temas em que o criterio está inserido.
+            </remarks>
+            <param name="request">Um campo contento o array de ids de criterios</param>
+            <returns>
+            Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula as entidades <see cref="T:EcoScale.src.Models.Abstract.CriterioPlanilha"/> buscados.
+            </returns>
+            <response code="200">Os criterios</response>
+            <response code="404">Nenhum criterio encontrado</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.RespostaEmBlocos(EcoScale.src.Public.DTOs.RespostaEmBlocosRequest)">
+            <summary>
+            Resposta em blocos de um questionario.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            Apenas os os objetos de <see cref="T:EcoScale.src.Public.DTOs.ItemAvaliadoUpdateRequest"/>, além do 'QuestionarioId' devem ser enviados. 
+            </remarks>
+            <param name="request">O objeto contendo o id do questionario e a lista de itens. <see cref="T:EcoScale.src.Public.DTOs.RespostaEmBlocosRequest"/></param>
+            <returns>
+            Este endpoint não retorna nada, apenas atualiza o questionario com as respostas enviadas.
+            </returns>
+            <response code="200">Questionario atualizado com sucesso</response>
+            <response code="404">Questionario não encontrado</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.FinalizarQuestionario(System.Int32)">
+            <summary>
+            Finaliza um questionario.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            As respostas do questionario são enviadas para a LLM, que então gera o relatorio de sustentabilidade.
+            </remarks>
+            <param name="questionarioId">O id do questionario que foi finalizado.</param>
+            <returns>
+            O relatorio gerado pela LLM.
+            </returns>
+            <response code="200">Questionario finalizado, agora considerado como removido.</response>
+            <response code="404">Questionario não encontrado</response>
+            <response code="400">Nem todos os itens foram respondidos</response>
+            <response code="500">Erro ao gerar o relatorio</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.GetByToken">
+            <summary>
+            Busca um questionario pelo token do usuário
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <returns>
+            O Questionario <see cref="T:EcoScale.src.Models.Questionario"/>
+            </returns>
+            <response code="200">Questionario</response>
+            <response code="404">Questionario não encontrado</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.GetByTokenBool">
+            <summary>
+            Busca um questionario pelo token do usuário, retornando possuiQuestionario = true ou false.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <returns>
+            Json contendo possuiQuestionario, como false ou true
+            </returns>
+            <response code="200"></response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.GetCriteriosNaoRespondidos">
+            <summary>
+            Retorna o questionario com os criterios que ainda não foram respondidos.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            Criterios que possuem pelo menos um item com resposta nula são retornados.
+            </remarks>
+            <returns>
+            Questionario com os criterios que ainda não foram respondidos.
+            </returns>
+            <response code="200">Questionario com os criterios não respondidos</response>
+            <response code="404">Questionario não encontrado</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.QuestionarioController.RespondeuTudo">
+            <summary>
+            Retorna respondido = true ou false, indicando se o questionario foi respondido completamente.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <returns>
+            respondeu = true ou false, indicando se o questionario foi respondido completamente.
+            </returns>
+            <response code="200">respondido true|false</response>
+            <response code="404">Questionario não encontrado</response>
+        </member>
+        <member name="M:EcoScale.src.Middlewares.ErrorHandlingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Processa a requisição HTTP passando o controle para o próximo middleware na cadeia e captura quaisquer exceções que possam ocorrer,
+            garantindo que erros inesperados sejam devidamente tratados e registrados.
+            </summary>
+            <param name="context">O contexto da requisição HTTP atual.</param>
+            <returns>Uma tarefa que representa a operação assíncrona do processamento da requisição.</returns>
+        </member>
+        <member name="M:EcoScale.src.Middlewares.ErrorHandlingMiddleware.HandleExceptionAsync(Microsoft.AspNetCore.Http.HttpContext,System.Exception)">
+            <summary>
+            Trata as exceções que ocorrem durante o processamento de uma requisição HTTP,
+            definindo o código de status apropriado e a mensagem de erro na resposta.
+            O método mapeia tipos de exceção específicos, como NotFoundException, BadRequestException,
+            UnauthorizedException, Exceptions.KeyNotFoundException, InvalidPasswordException e Exceptions.InvalidOperationException,
+            para os respectivos códigos de status HTTP. Para quaisquer outras exceções, é utilizado o Internal Server Error.
+            </summary>
+            <param name="context">O contexto HTTP associado à requisição atual.</param>
+            <param name="exception">A exceção que foi lançada durante o processamento da requisição.</param>
+            <returns>Uma tarefa que representa a operação assíncrona de escrita da resposta de erro.</returns>
+        </member>
+        <member name="M:EcoScale.src.Services.Helpers.EmpresaHelper.CnpjRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>^\\d{14}$</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Match a Unicode digit exactly 14 times.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:EcoScale.src.Services.Helpers.Helper.AtualizarAtributosAsync``1(System.Object,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Atualiza os atributos de uma entidade do tipo especificado usando um dicionário de atributos.
+            </summary>
+            <typeparam name="T">O tipo da entidade a ser atualizada.</typeparam>
+            <param name="chave">A chave utilizada para localizar a entidade no contexto.</param>
+            <param name="atributos">Um dicionário contendo os pares nome/valor dos atributos a serem atualizados.</param>
+            <remarks>
+            Se a entidade não for encontrada, será lançada uma <see cref="T:EcoScale.src.Middlewares.Exceptions.NotFoundException"/>.
+            <para>
+            Caso o atributo "Senha" seja informado, seu valor passará por um processo de hash utilizando o objeto <c>_cryptography</c>.
+            Se o valor informado para "Senha" for nulo, será lançada uma <see cref="T:EcoScale.src.Middlewares.Exceptions.BadRequestException"/>.
+            </para>
+            Após a atualização dos atributos modificados, as alterações são persistidas no banco de dados e o contexto é descartado.
+            </remarks>
+            <returns>A entidade atualizada do tipo <typeparamref name="T"/>.</returns>
+        </member>
+        <member name="M:EcoScale.src.Services.EmailSender.SendEmailAsync(System.String,EcoScale.src.Services.EmailTypes,System.String)">
+            <summary>
+            Envia um e-mail de forma assíncrona utilizando as configurações especificadas no serviço.
+            </summary>
+            <param name="to">Endereço de e-mail do destinatário.</param>
+            <param name="type">Assunto da mensagem, que também é utilizado para gerar o conteúdo HTML do corpo do e-mail.</param>
+            <param name="validationNumer">Número de validação, quando aplicavel</param>
+            <remarks>
+            O método cria uma mensagem de e-mail em formato HTML e utiliza um cliente SMTP para conectar, autenticar, enviar o e-mail e desconectar.
+            Caso ocorra uma exceção de soquete durante o envio, uma nova exceção é lançada com uma mensagem detalhada.
+            </remarks>
+            <exception cref="T:EcoScale.src.Middlewares.Exceptions.MailerException">É lançada quando ocorre uma falha na conexão ou envio do e-mail.</exception>
+            <returns>Uma tarefa que representa a operação assíncrona de envio do e-mail.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.CnpjRegex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the CnpjRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.CnpjRegex_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CnpjRegex_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.CnpjRegex_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CnpjRegex_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.CnpjRegex_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CnpjRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CnpjRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.CnpjRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+    </members>
+</doc>
