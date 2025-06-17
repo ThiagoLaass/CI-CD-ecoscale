@@ -1,35 +1,43 @@
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
 namespace EcoScale.src.Services.Helpers
 {
-    public class Api()
+    public class ApiHelper
     {
-        public StringContent GetPayload<T>(T payload)
+        private static readonly HttpClient _httpClient;
+        private static readonly JsonSerializerOptions _jsonOptions = new()
         {
-            return new StringContent(
-                JsonSerializer.Serialize(payload),
-                Encoding.UTF8,
-                "application/json"
-            );
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        static ApiHelper()
+        {
+            _httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromMinutes(2)
+            };
+            _httpClient.DefaultRequestHeaders
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public HttpClient GetClient()
+        private static StringContent GetPayload<T>(T payload)
         {
-            return new HttpClient();
+            var json = JsonSerializer.Serialize(payload, _jsonOptions);
+            return new StringContent(json, Encoding.UTF8, "application/json");
         }
 
         public async Task<HttpResponseMessage> PostAsync<T>(string uri, T payload)
         {
-            var client = GetClient();
-            var content = GetPayload(payload);
-            return await client.PostAsync(uri, content);
+            using var content = GetPayload(payload);
+            return await _httpClient.PostAsync(uri, content);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string uri)
         {
-            var client = GetClient();
-            return await client.GetAsync(uri);
+            return await _httpClient.GetAsync(uri);
         }
     }
 }

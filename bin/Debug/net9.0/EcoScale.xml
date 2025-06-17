@@ -28,6 +28,18 @@
         <member name="M:EcoScale.Migrations.fix_empresa_relation.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:EcoScale.Migrations.fix_notis">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.Migrations.fix_notis.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.Migrations.fix_notis.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EcoScale.Migrations.fix_notis.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="M:EcoScale.src.Auth.Auth.ProcessLoginAsync``1(``0,System.String,System.String,System.String,System.String)">
             <summary>
             Processa a autenticação de um usuário (empresa ou moderador), verificando a senha,
@@ -199,7 +211,7 @@
             <remarks>
             Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
             </remarks>
-            <response code="200">O pedido de avaliação foi criado.</response>
+            <response code="204">O pedido de avaliação foi criado.</response>
             <response code="401">Usuário não autorizado a acessar esta operação.</response>
             <response code="400">A empresa não tem um relatório para ser avaliado.</response>
             <response code="404">Empresa não encontrada</response>
@@ -258,7 +270,7 @@
         </member>
         <member name="M:EcoScale.src.Controllers.ModeradorController.Avaliar(EcoScale.src.Public.DTOs.AvaliarRelatorio)">
             <summary>
-            A avaliação de um relatório. Ainda em teste
+            A avaliação de um relatório.
             </summary>
             <remarks>
             A avaliação de um relatório requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
@@ -269,6 +281,24 @@
             <response code="404">Indica que o relatório não foi encontrado.</response>
             <response code="500">Indica que ocorreu um erro interno no servidor.</response>
             <response code="401">Indica que o usuário não está autorizado a acessar este recurso.</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.NotificacaoController.All">
+            <summary>
+            Retorna todas as notificações de todos os usuários.
+            </summary>
+            <returns>Mensagem de teste</returns>
+        </member>
+        <member name="M:EcoScale.src.Controllers.NotificacaoController.AllByUser">
+            <summary>
+            Retorna todas as notificações do usuário autenticado.
+            </summary>
+            <returns>Objetos de <see cref="T:EcoScale.src.Models.Notifications.Notificacao"/> do usuário de acordo com o token utilizado</returns>
+        </member>
+        <member name="M:EcoScale.src.Controllers.NotificacaoController.MarkAsRead(System.Int32)">
+            <summary>
+            Marca uma notificação como lida pelo ID.
+            </summary>
+            <returns>Este endpoint não retorna nada</returns>
         </member>
         <member name="M:EcoScale.src.Controllers.PlanilhaController.CreatePlanilha(EcoScale.src.Public.DTOs.PlanilhaCreationRequest)">
             <summary>
@@ -482,6 +512,28 @@
             </returns>
             <response code="200">respondido true|false</response>
             <response code="404">Questionario não encontrado</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.RelatorioController.GetRelatorioById(System.Int32)">
+            <summary>
+            Recupera o relatório da empresa com base no Id da empresa.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <response code="200">O relatorio da empresa</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Relatorio ou empresa não encontrada</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.RelatorioController.GetAll">
+            <summary>
+            Recupera todos os relatórios de todas as empresas.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <response code="200">Todos os relatórios</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Relatorio ou empresa não encontrada</response>
         </member>
         <member name="M:EcoScale.src.Middlewares.ErrorHandlingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
             <summary>

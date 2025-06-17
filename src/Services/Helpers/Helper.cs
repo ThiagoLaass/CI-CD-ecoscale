@@ -3,18 +3,19 @@ using EcoScale.src.Data;
 using EcoScale.src.Middlewares.Exceptions;
 using EcoScale.src.Models;
 using EcoScale.src.Models.Abstract;
-using EcoScale.src.Services.Abstract;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcoScale.src.Services.Helpers
 {
-    public class Helper(AppDbContext context) {
+    public class Helper(AppDbContext context)
+    {
 
         protected readonly AppDbContext _context = context;
         protected readonly Auth.Auth _auth = new(context);
         protected readonly Cryptography _cryptography = new();
 
-        public bool SenhaValida(string senha, string senhaHashed) {
+        public bool SenhaValida(string senha, string senhaHashed)
+        {
             return _cryptography.VerifyHash(senhaHashed, senha);
         }
 
@@ -35,7 +36,7 @@ namespace EcoScale.src.Services.Helpers
         /// <returns>A entidade atualizada do tipo <typeparamref name="T"/>.</returns>
         public async Task<T> AtualizarAtributosAsync<T>(object chave, Dictionary<string, object> atributos) where T : class
         {
-            T entidade = await _context.Set<T>().FindAsync(chave) 
+            T entidade = await _context.Set<T>().FindAsync(chave)
             ?? throw new NotFoundException("Entidade não encontrada.");
 
             foreach (var kvp in atributos)
@@ -49,22 +50,22 @@ namespace EcoScale.src.Services.Helpers
                     case "senha":
                     case "cpf":
                     case "cnpj":
-                        string valor = kvp.Value.ToString() 
+                        string valor = kvp.Value.ToString()
                             ?? throw new BadRequestException($"Se o campo {kvp.Key} for informado, ele não pode ser nulo.");
                         propriedade.SetValue(entidade, _cryptography.CreateHash(valor));
-                    break;
+                        break;
                     default:
                         propriedade.SetValue(entidade, kvp.Value);
-                    break;
+                        break;
                 }
 
-            _context.Entry(entidade).Property(kvp.Key).IsModified = true;
+                _context.Entry(entidade).Property(kvp.Key).IsModified = true;
             }
 
             await _context.SaveChangesAsync();
             return entidade;
         }
-        
+
         public async Task<Questionario> UpdateQuestionario(Questionario questionario)
         {
             _context.Questionarios.Update(questionario);
@@ -104,15 +105,29 @@ namespace EcoScale.src.Services.Helpers
 
             return cpf.EndsWith(digito1 + digito2);
         }
-        public string LimpaDocumento(string documento) {
+        public string LimpaDocumento(string documento)
+        {
             return new string([.. documento.Where(char.IsDigit)]);
         }
 
         public async Task<ICollection<CriterioPlanilha>> GetCriterios(ICollection<int> ids)
         {
-            var criterios = await _context.CriteriosPlanilha.Where(c => ids.Contains(c.Id)).Include(c=> c.Itens).ToListAsync() 
+            var criterios = await _context.CriteriosPlanilha.Where(c => ids.Contains(c.Id)).Include(c => c.Itens).ToListAsync()
                 ?? await _context.CriteriosPlanilha.Include(c => c.Itens).ToListAsync();
             return criterios;
+        }
+
+        public async Task<Usuario> GetUsuarioByEmail(string email)
+        {
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email)
+                ?? throw new NotFoundException("Usuário não encontrado.");
+            return usuario;
+        }
+
+        public async Task<Usuario> GetUserFromClaims(HttpContext context)
+        {
+            var email = (context.User.FindFirst("Email")?.Value) ?? throw new UnauthorizedException("Usuário não autenticado.");
+            return await GetUsuarioByEmail(email);
         }
     }
 }

@@ -2,6 +2,7 @@ using AutoMapper;
 using EcoScale.src.Data;
 using EcoScale.src.Middlewares.Exceptions;
 using EcoScale.src.Models;
+using EcoScale.src.Models.Notifications;
 using EcoScale.src.Public.DTOs;
 using EcoScale.src.Public.Enum;
 using EcoScale.src.Services.Abstract;
@@ -61,6 +62,14 @@ namespace EcoScale.src.Services
             relatorio.Revisado = true;
             relatorio.Revisor = moderador;
             _mapper.Map(request.Relatorio, relatorio);
+            var DataFormatada = reqAvaliacao.UpdatedAt.ToString("dd/MM/yyyy");
+            var notificacao = new Notificacao
+            {
+                Mensagem = $"O seu relatório {relatorio.Id} foi avaliado por {moderador.Nome}. Na data {DataFormatada}.",
+                Usuario = relatorio.Empresa,
+            };
+
+            _context.Notificacoes.Add(notificacao);
 
             await _context.SaveChangesAsync();
             return relatorio;

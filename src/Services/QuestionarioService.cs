@@ -102,6 +102,7 @@ namespace EcoScale.src.Services
 
             return new QuestionarioResponse
             {
+                Id = questionario.Id,
                 Areas = areasFiltradas
             };
         }
@@ -253,7 +254,7 @@ namespace EcoScale.src.Services
 
             return new QuestionarioResponse
             {
-                QuestionarioId = questionario.Id,
+                Id = questionario.Id,
                 Areas = areasFiltradas
             };
         }

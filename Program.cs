@@ -87,10 +87,10 @@ builder.Services.AddCors(options =>
         policyBuilder
             .WithOrigins(
                 "http://localhost:8081",       
-                "http://192.168.0.14:19000",   
-                "http://192.168.0.14:19001",   
-                "exp://192.168.0.14:19000",    
-                "exp://192.168.0.14:19001"     
+                "http://192.168.0.8:19000",   
+                "http://192.168.0.8:19001",   
+                "exp://192.168.0.8:19000",    
+                "exp://192.168.0.8:19001"     
             )
             .AllowAnyMethod()
             .AllowAnyHeader()

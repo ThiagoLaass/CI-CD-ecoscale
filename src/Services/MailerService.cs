@@ -21,7 +21,7 @@ namespace EcoScale.src.Services
         /// </remarks>
         /// <exception cref="MailerException">É lançada quando ocorre uma falha na conexão ou envio do e-mail.</exception>
         /// <returns>Uma tarefa que representa a operação assíncrona de envio do e-mail.</returns>
-        public async Task SendEmailAsync(string to, EmailTypes type, string validationNumer) {
+        public async Task SendEmailAsync(string to, EmailTypes type, string? validationNumer) {
             var message = new MimeMessage();
             string htmlMessage;
             if(type.Equals(EmailTypes.CONFIRMAREMAIL)) {
@@ -257,8 +257,10 @@ namespace EcoScale.src.Services
         public required string Password { get; set; }
     }
 
-    public enum EmailTypes {
+    public enum EmailTypes
+    {
         CONFIRMAREMAIL,
-        RELATORIO
+        RELATORIO,
+        RELATORIOAVALIADO
     }
 }

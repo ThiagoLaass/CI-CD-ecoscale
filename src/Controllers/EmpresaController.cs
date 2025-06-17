@@ -112,7 +112,7 @@ namespace EcoScale.src.Controllers
         /// <remarks>
         /// Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
         /// </remarks>
-        /// <response code="200">O pedido de avaliação foi criado.</response>
+        /// <response code="204">O pedido de avaliação foi criado.</response>
         /// <response code="401">Usuário não autorizado a acessar esta operação.</response>
         /// <response code="400">A empresa não tem um relatório para ser avaliado.</response>
         /// <response code="404">Empresa não encontrada</response>
@@ -123,7 +123,7 @@ namespace EcoScale.src.Controllers
         {
             HttpContext context = HttpContext;
             await _service.SolicitarAvaliacaoRelatorio(context, request);
-            return Ok();
+            return NoContent();
         }
 
         /// <summary>

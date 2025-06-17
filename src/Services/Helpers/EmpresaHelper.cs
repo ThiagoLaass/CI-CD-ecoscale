@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EcoScale.src.Services.Helpers
 {
     public partial class EmpresaHelper(AppDbContext context) : AbstractService(context) {
-        private readonly Api _api = new();
+        private readonly ApiHelper _api = new();
         public async Task<bool> ValidaCnpj(string Cnpj)
         {
             if (!ValidaNumeroCnpj(Cnpj)) return false;

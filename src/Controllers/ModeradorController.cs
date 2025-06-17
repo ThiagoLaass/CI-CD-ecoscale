@@ -57,7 +57,7 @@ namespace EcoScale.src.Controllers
         }
 
         /// <summary>
-        /// A avaliação de um relatório. Ainda em teste
+        /// A avaliação de um relatório.
         /// </summary>
         /// <remarks>
         /// A avaliação de um relatório requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.

@@ -80,7 +80,7 @@ namespace EcoScale.src.Public.DTOs
     
     public class QuestionarioResponse
     {
-        public int? QuestionarioId { get; set; }
+        public int? Id { get; set; }
         public required ICollection<Area> Areas { get; set; }
     }
 }

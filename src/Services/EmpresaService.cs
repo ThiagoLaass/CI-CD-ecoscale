@@ -136,6 +136,7 @@ namespace EcoScale.src.Services
             Notificacao notificacao = new()
             {
                 Mensagem = $"Uma nova avaliação da empresa {empresa.RazaoSocial} foi solicitada.",
+                Usuario = empresa,
             };
 
             _context.Notificacoes.Add(notificacao);

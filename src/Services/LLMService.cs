@@ -10,7 +10,7 @@ namespace EcoScale.src.Services
     public class LLMService(AppDbContext context, IMapper mapper)
     {
         private readonly IMapper _mapper = mapper;
-        private readonly Api _api = new();
+        private readonly ApiHelper _api = new();
         private readonly Helper _helper = new(context);
         private readonly string _uri = "https://ecoscale-llm.onrender.com/";
 
