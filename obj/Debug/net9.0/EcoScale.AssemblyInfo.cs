@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EcoScale")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+77bb076d4f4625a16c702388ea0329d5249c509a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3c50ae6fd6ae4f1c056255240dc71d6acab64411")]
 [assembly: System.Reflection.AssemblyProductAttribute("EcoScale")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EcoScale")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
