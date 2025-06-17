@@ -8,30 +8,38 @@ using EcoScale.src.Public.DTOs;
 using EcoScale.src.Public.Enum;
 using EcoScale.src.Services;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Configuration;
 namespace EcoScale.src.Auth
 {
-    public class Auth (AppDbContext context)
+    public class Auth(AppDbContext context)
     {
         private readonly AppDbContext _context = context;
+        private readonly IConfiguration _configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
         private readonly Cryptography _cryptography = new();
         private readonly Jwt _jwt = new();
 
-        public async Task<LoginResponse> LoginAsync(LoginRequest request){
+        public async Task<LoginResponse> LoginAsync(LoginRequest request)
+        {
             var user = await _context.Usuarios.SingleOrDefaultAsync(u => u.Email == request.Email)
                 ?? throw new NotFoundException("Usuário não encontrado.");
-            if (!_cryptography.VerifyHash(user.Senha, request.Senha)) {
+            if (!_cryptography.VerifyHash(user.Senha, request.Senha))
+            {
                 throw new UnauthorizedAccessException("Senha inválida.");
             }
 
-            if(!user.EmailConfirmado) {
+            if (!user.EmailConfirmado)
+            {
                 await ProcessLoginAsync(user, user.Email, user.Id.ToString(), request.Senha, user.Senha);
-                return new LoginResponse {
-                    Token  = null,
+                return new LoginResponse
+                {
+                    Token = null,
                 };
             }
-            return new LoginResponse {
-                Token  = _jwt.GenerateToken(user.Email, user.Role == Role.Moderador),
+            return new LoginResponse
+            {
+                Token = _jwt.GenerateToken(user.Email, user.Role == Role.Moderador),
             };
         }
 
@@ -126,14 +134,22 @@ namespace EcoScale.src.Auth
             return ConfirmarEmailInternal(new EmailConfirmationRequest { Email = request.Email, Codigo = request.Codigo }, user.Id.ToString());
         }
 
-        public EmailSettings GetEmailSettings() {
-            return new() {
+        public EmailSettings GetEmailSettings()
+        {
+            var mail = _configuration.GetSection("Mailer");
+            return new EmailSettings
+            {
                 SmtpServer  = "smtp.gmail.com",
-                Password    = Environment.GetEnvironmentVariable("MAIL_PSS")    ?? throw new ArgumentNullException("EmailSettings:Password", "Email Password não configurado"),
-                Username    = Environment.GetEnvironmentVariable("MAIL_USERNAME") ?? throw new ArgumentNullException("EmailSettings:Username", "Email Username não configurado"),
-                FromAddress = Environment.GetEnvironmentVariable("MAIL_FROM_ADDRS") ?? throw new ArgumentNullException("EmailSettings:FromAddress", "Email FromAddress não configurado"),
-                DisplayName = Environment.GetEnvironmentVariable("MAIL_DISPLAY_NAME") ?? throw new ArgumentNullException("EmailSettings:DisplayName", "Email DisplayName não configurado"),
-                Port        = int.Parse(Environment.GetEnvironmentVariable("MAIL_PORT") ?? throw new ArgumentNullException("EmailSettings:Port", "Email Port não configurado")),
+                Password    = mail.GetValue<string>("pss")
+                                ?? throw new ArgumentNullException("Mailer:pss", "Email Password não configurado"),
+                Username    = mail.GetValue<string>("username")
+                                ?? throw new ArgumentNullException("Mailer:username", "Email Username não configurado"),
+                FromAddress = mail.GetValue<string>("from")
+                                ?? throw new ArgumentNullException("Mailer:from", "Email FromAddress não configurado"),
+                DisplayName = mail.GetValue<string>("displayName")
+                                ?? throw new ArgumentNullException("Mailer:displayName", "Email DisplayName não configurado"),
+                Port        = mail.GetValue<int?>("port")
+                                ?? throw new ArgumentNullException("Mailer:port", "Email Port não configurado")
             };
         }
         

@@ -5,26 +5,31 @@ using System.Text;
 namespace EcoScale.src.Auth
 {
     public class Jwt {
+        private readonly IConfiguration _configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
         public string GenerateToken(string email, bool IsModerador)
         {
             var claims = new List<Claim> {
                 new("Email", email)
             };
-            
-            if (IsModerador) {
+
+            if (IsModerador)
+            {
                 claims.Add(new Claim(ClaimTypes.Role, "Moderador"));
             }
-            else{
+            else
+            {
                 claims.Add(new Claim(ClaimTypes.Role, "Empresa"));
             }
 
-            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
-                   ?? throw new ArgumentNullException("JWT_SECRET_KEY", "Chave JWT não configurada");
-            var issuer    = Environment.GetEnvironmentVariable("JWT_ISSUER")
-                   ?? throw new ArgumentNullException("JWT_ISSUER", "Issuer JWT não configurado");
-            var audience  = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
-                   ?? throw new ArgumentNullException("JWT_AUDIENCE", "Audience JWT não configurado");
-
+            var secretKey = _configuration["Jwt:Key"]
+                ?? throw new ArgumentNullException("Jwt:Key", "Chave JWT não configurada");
+            var issuer = _configuration["Jwt:Issuer"]
+                ?? throw new ArgumentNullException("Jwt:Issuer", "Issuer JWT não configurado");
+            var audience = _configuration["Jwt:Audience"]
+                ?? throw new ArgumentNullException("Jwt:Audience", "Audience JWT não configurado");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -33,7 +38,7 @@ namespace EcoScale.src.Auth
                 audience,
                 claims: claims,
                 expires: DateTime.Now.AddDays(7),
-                signingCredentials: creds 
+                signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);

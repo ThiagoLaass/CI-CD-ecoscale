@@ -28,8 +28,11 @@ namespace EcoScale.src.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var DatabaseSenha = Environment.GetEnvironmentVariable("DB_PSS") ?? throw new Exception("Nome do banco de dados não está no appsettings.json");
-            optionsBuilder.UseNpgsql($"Host=db.jxfltssyguhzmkrlggfr.supabase.co;Port=5432;Database=postgres;Username=postgres;Password={DatabaseSenha}");
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
