@@ -144,4 +144,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+Log.Information("Server starting and listening on {Url}", app.Urls.FirstOrDefault());
 app.Run();
