@@ -4,7 +4,7 @@ using EcoScale.src.Middlewares.Exceptions;
 using EcoScale.src.Models;
 using EcoScale.src.Models.Abstract;
 using Microsoft.EntityFrameworkCore;
-
+//t
 namespace EcoScale.src.Services.Helpers
 {
     public class Helper(AppDbContext context)
