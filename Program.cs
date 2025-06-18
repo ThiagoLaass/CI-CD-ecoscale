@@ -41,14 +41,13 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("EcoScalePolicy",
-        policy => policy
-            .AllowAnyOrigin()
+    options.AddPolicy("CorsPolicy", policy =>
+        policy
+            .WithOrigins("https://pmg-es-2025-1-ti4-3170100-pesquisa-bh-tec.onrender.com")
             .AllowAnyMethod()
             .AllowAnyHeader()
     );
 });
-
 
 // Configuração unificada da Autenticação JWT
 builder.Services.AddAuthentication(options =>
@@ -94,24 +93,6 @@ builder.Services.AddAuthorizationBuilder().AddPolicy("ModeradorPolicy", policy =
     policy.RequireRole("Moderador");
 });
 
-// Configuração do CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", policyBuilder =>
-        policyBuilder
-            .WithOrigins(
-                "http://localhost:8081",       
-                "http://192.168.0.8:19000",   
-                "http://192.168.0.8:19001",   
-                "exp://192.168.0.8:19000",    
-                "exp://192.168.0.8:19001"     
-            )
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials());
-});
-
-//builder.Services.AddControllers();
 
 // Adicionando a conexão com o banco de dados
 builder.Services.AddDbContext<AppDbContext>();
@@ -145,12 +126,14 @@ else
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Log primary request info
-app.Use((context, next) => {
+app.Use((context, next) =>
+{
     Log.Information("Request from: {Origin}", context.Request.Headers.Origin);
     return next();
 });
 
-app.UseCors("EcoScalePolicy");
+app.UseRouting();
+app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
