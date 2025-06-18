@@ -12,6 +12,7 @@ using EcoScale.src.Services;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddConsole();
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
@@ -114,7 +115,6 @@ builder.Services
 builder.Services.AddControllers();
 
 builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
