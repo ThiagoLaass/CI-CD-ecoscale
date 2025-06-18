@@ -39,6 +39,17 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("EcoScalePolicy",
+        policy => policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+    );
+});
+
+
 // Configuração unificada da Autenticação JWT
 builder.Services.AddAuthentication(options =>
 {
@@ -139,7 +150,7 @@ app.Use((context, next) => {
     return next();
 });
 
-app.UseCors("CorsPolicy");
+app.UseCors("EcoScalePolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
