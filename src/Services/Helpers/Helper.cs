@@ -9,7 +9,7 @@ namespace EcoScale.src.Services.Helpers
 {
     public class Helper(AppDbContext context)
     {
-//hg
+
         protected readonly AppDbContext _context = context;
         protected readonly Auth.Auth _auth = new(context);
         protected readonly Cryptography _cryptography = new();
