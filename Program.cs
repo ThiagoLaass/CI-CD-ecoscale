@@ -144,6 +144,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// Log the server's listening URL before starting the app
-Log.Information("Server starting and listening on {Url}", "http://0.0.0.0:5051");
-app.Run("http://0.0.0.0:5051");
+app.Run();
