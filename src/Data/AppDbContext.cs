@@ -28,10 +28,8 @@ namespace EcoScale.src.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+                ?? throw new ArgumentNullException("DB_CONNECTION_STRING", "String de conexão não configurada");
             optionsBuilder.UseNpgsql(connectionString);
         }
 

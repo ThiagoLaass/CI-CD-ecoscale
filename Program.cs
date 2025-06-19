@@ -56,7 +56,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    var jwtKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key");
+    var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? throw new ArgumentNullException("Jwt:Key");
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,

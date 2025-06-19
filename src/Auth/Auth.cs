@@ -26,7 +26,7 @@ namespace EcoScale.src.Auth
                 ?? throw new NotFoundException("Usuário não encontrado.");
             if (!_cryptography.VerifyHash(user.Senha, request.Senha))
             {
-                throw new UnauthorizedAccessException("Senha inválida.");
+                throw new InvalidPasswordException("Senha inválida.");
             }
 
             if (!user.EmailConfirmado)
@@ -136,20 +136,18 @@ namespace EcoScale.src.Auth
 
         public EmailSettings GetEmailSettings()
         {
-            var mail = _configuration.GetSection("Mailer");
             return new EmailSettings
             {
                 SmtpServer  = "smtp.gmail.com",
-                Password    = mail.GetValue<string>("pss")
+                Password    = Environment.GetEnvironmentVariable("MAIL_PSS")
                                 ?? throw new ArgumentNullException("Mailer:pss", "Email Password não configurado"),
-                Username    = mail.GetValue<string>("username")
+                Username    = Environment.GetEnvironmentVariable("MAIL_USERNAME")
                                 ?? throw new ArgumentNullException("Mailer:username", "Email Username não configurado"),
-                FromAddress = mail.GetValue<string>("from")
+                FromAddress = Environment.GetEnvironmentVariable("MAIL_FROM_ADDRS")
                                 ?? throw new ArgumentNullException("Mailer:from", "Email FromAddress não configurado"),
-                DisplayName = mail.GetValue<string>("displayName")
+                DisplayName = Environment.GetEnvironmentVariable("MAIL_DISPLAY_NAME")
                                 ?? throw new ArgumentNullException("Mailer:displayName", "Email DisplayName não configurado"),
-                Port        = mail.GetValue<int?>("port")
-                                ?? throw new ArgumentNullException("Mailer:port", "Email Port não configurado")
+                Port        = int.TryParse(Environment.GetEnvironmentVariable("MAIL_PORT"), out var port) ? port : 587
             };
         }
         

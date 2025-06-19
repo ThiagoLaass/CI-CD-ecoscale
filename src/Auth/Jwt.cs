@@ -24,11 +24,11 @@ namespace EcoScale.src.Auth
                 claims.Add(new Claim(ClaimTypes.Role, "Empresa"));
             }
 
-            var secretKey = _configuration["Jwt:Key"]
+            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
                 ?? throw new ArgumentNullException("Jwt:Key", "Chave JWT não configurada");
-            var issuer = _configuration["Jwt:Issuer"]
+            var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER")
                 ?? throw new ArgumentNullException("Jwt:Issuer", "Issuer JWT não configurado");
-            var audience = _configuration["Jwt:Audience"]
+            var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
                 ?? throw new ArgumentNullException("Jwt:Audience", "Audience JWT não configurado");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
