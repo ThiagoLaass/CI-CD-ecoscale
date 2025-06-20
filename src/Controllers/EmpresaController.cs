@@ -144,5 +144,42 @@ namespace EcoScale.src.Controllers
             RelatorioResponse relatorio = await _service.GetRelatorio(context);
             return Ok(relatorio);
         }
+        /// <summary>
+        /// Recupera o relatório da empresa com base no Id da empresa.
+        /// </summary>
+        /// <remarks>
+        /// Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+        /// </remarks>
+        /// <response code="200">O relatorio da empresa</response>
+        /// <response code="401">Usuário não autorizado a acessar esta operação.</response>
+        /// <response code="404">Relatorio ou empresa não encontrada</response>
+        [HttpGet("get/relatorio{id}")]
+        [Authorize(Policy = "EmpresaPolicy")]
+        [ProducesResponseType(typeof(RelatorioResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRelatorioById(int id)
+        {
+            RelatorioResponse relatorio = await _service.GetRelatorioByEmpresaId(id);
+            return Ok(relatorio);
+        }
+        /// <summary>
+        /// Recupera os dados da empresa com base no Id.
+        /// </summary>
+        /// <remarks>
+        /// Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+        /// </remarks>
+        /// <returns>
+        /// Retorna um objeto <see cref="IActionResult"/> que encapsula a entidade <see cref="Empresa"/> caso encontrada.
+        /// </returns>
+        /// <response code="200">Retorna a empresa correspondente ao CNPJ.</response>
+        /// <response code="401">Usuário não autorizado a acessar esta operação.</response>
+        /// <response code="404">Empresa com o CNPJ especificado não foi encontrada.</response>
+        [HttpGet("get/{id}")]
+        [Authorize(Policy = "EmpresaPolicy")]
+        [ProducesResponseType(typeof(Empresa), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetById(int id)
+        {
+            Empresa e = await _service.GetById(id);
+            return Ok(e);
+        }
     }
 }

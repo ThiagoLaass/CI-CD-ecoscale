@@ -17,7 +17,7 @@ namespace EcoScale.src.Services
 
         public async Task<List<Notificacao>> GetAll()
         {
-            var notis = await _context.Notificacoes.ToListAsync();
+            var notis = await _context.Notificacoes.Include(n => n.Usuario).ToListAsync();
             return notis ?? throw new NotFoundException("Nenhuma notificacao encontrada.");
         }
 

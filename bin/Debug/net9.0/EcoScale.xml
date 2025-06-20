@@ -227,6 +227,31 @@
             <response code="401">Usuário não autorizado a acessar esta operação.</response>
             <response code="404">Relatorio ou empresa não encontrada</response>
         </member>
+        <member name="M:EcoScale.src.Controllers.EmpresaController.GetRelatorioById(System.Int32)">
+            <summary>
+            Recupera o relatório da empresa com base no Id da empresa.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <response code="200">O relatorio da empresa</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Relatorio ou empresa não encontrada</response>
+        </member>
+        <member name="M:EcoScale.src.Controllers.EmpresaController.GetById(System.Int32)">
+            <summary>
+            Recupera os dados da empresa com base no Id.
+            </summary>
+            <remarks>
+            Este endpoint requer autenticação por meio do envio do JWT válido no cabeçalho da requisição.
+            </remarks>
+            <returns>
+            Retorna um objeto <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> que encapsula a entidade <see cref="T:EcoScale.src.Models.Empresa"/> caso encontrada.
+            </returns>
+            <response code="200">Retorna a empresa correspondente ao CNPJ.</response>
+            <response code="401">Usuário não autorizado a acessar esta operação.</response>
+            <response code="404">Empresa com o CNPJ especificado não foi encontrada.</response>
+        </member>
         <member name="M:EcoScale.src.Controllers.LLMController.GetCriterios(EcoScale.src.Public.DTOs.GetCriteriosRequest)">
             <summary>
             Busca os critérios de avaliação que a empresa irá responder.

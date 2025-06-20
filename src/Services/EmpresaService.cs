@@ -135,7 +135,7 @@ namespace EcoScale.src.Services
 
             Notificacao notificacao = new()
             {
-                Mensagem = $"Uma nova avaliação da empresa {empresa.RazaoSocial} foi solicitada.",
+                Mensagem = $"Uma nova avaliação da empresa {empresa.RazaoSocial} foi solicitada: {request.Motivo}",
                 Usuario = empresa,
             };
 
@@ -152,6 +152,22 @@ namespace EcoScale.src.Services
                 .FirstOrDefaultAsync(r => r.Empresa.Id == empresa.Id)
                 ?? throw new NotFoundException("Relatório não encontrado.");
             return _mapper.Map<RelatorioResponse>(relatorio);
+        }
+
+        public async Task<RelatorioResponse> GetRelatorioByEmpresaId(int id)
+        {
+            var relatorio = await _context.Relatorios
+                .Include(r => r.Recomendacoes)
+                .FirstOrDefaultAsync(r => r.Empresa.Id == id) ?? throw new NotFoundException("Relatório não encontrado.");
+            return _mapper.Map<RelatorioResponse>(relatorio);
+        }
+
+        public async Task<Empresa> GetById(int id)
+        {
+            var empresa = await _context.Empresas
+                .Include(e => e.Responsavel)
+                .FirstOrDefaultAsync(e => e.Id == id && !e.IsRemovida) ?? throw new NotFoundException("Empresa não encontrada.");
+            return empresa;
         }
     }
 }
